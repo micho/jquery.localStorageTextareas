@@ -8,19 +8,36 @@
     <script src="../jquery.localStorageTextareas.js" type="text/javascript"></script>
     <script type="text/javascript">
       $(document).ready(function() {
-          $('textarea[data-save-id]').loadSavedTextareas();
+        $('textarea[data-save-id]').loadSavedTextareas();
       });
     </script>
     <style>
-      <!--
-        textarea {
-          width: 600px;
-          height: 400px;
-        }
-      -->
+      textarea {
+        width: 300px;
+        height: 100px;
+      }
     </style>
   </head>
   <body>
-    <textarea data-save-id="example1"></textarea>
+    <h1>Demo for textareas with localStorage</h1>
+    <p>This textarea has a <b>data-save-id</b> attribute with a unique id.</p>
+    <p>Edit it and reload the page. When clicking it, the content will be loaded from what you typed before.</p>
+    <textarea data-save-id="example1" placeholder="Edit me, reload the page and click on me"></textarea>
+    <p>Of course, clicking on it to load it isn't ideal at all. That's why you can call $(document).loadSavedTextareas() to load it when the page is loaded:</p>
+    <pre><code>
+$(document).loadSavedTextareas();
+    </code></pre>
+    <div>
+      <button onclick="javascript:alert(1)">Execute this code to load from localStorage</button>
+    </div>
+    <p>The textarea below is loaded by calling $("#container").loadSavedTextareas() after the page loads, so you don't need to click on it:</p>
+    <div id="container">
+      <textarea data-save-id="example2" placeholder="Edit me, reload the page and I'll be reloaded by JS"></textarea>
+    </div>
+    <script>
+      $(function () {
+        $("#container").loadSavedTextareas();
+      });
+    </script>
   </body>
 </html>
