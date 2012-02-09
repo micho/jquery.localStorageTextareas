@@ -20,6 +20,6 @@ READ THE CODE to understand how it works, it's not so long :)
 Notes
 -----
 
-- Depends on Modernizr.js, underscore.js, jQuery 1.7.
+- Depends on underscore.js, jQuery 1.7.
 - You will need to manually clear localStorage if you need it.
 

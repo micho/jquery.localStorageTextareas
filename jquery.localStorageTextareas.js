@@ -12,7 +12,7 @@
 //
 // Notes:
 //
-// - Depends on Modernizr.js, underscore.js, jQuery 1.7.
+// - Depends on underscore.js, jQuery 1.7.
 // - You will need to manually clear localStorage if you need it.
 //
 // By Pablo Villalba, for Teambox 4 (http://teambox.com)
@@ -21,7 +21,16 @@
 (function () {
 
   // Run only if localStorage is supported
-  if (!Modernizr.localstorage) {
+  // (stolen from Modernizr)
+  function localStorageSupported() {
+    try {
+      return !!localStorage.getItem;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  if (!localStorageSupported()) {
     return;
   }
 
