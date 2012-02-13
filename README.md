@@ -23,3 +23,7 @@ Notes
 - Depends on underscore.js, jQuery 1.7.
 - You will need to manually clear localStorage if you need it.
 
+Licence
+-------
+
+MIT Licence, do whatever you want with it :)
