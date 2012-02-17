@@ -50,11 +50,13 @@
   // Load text for the textarea if clicked and it's empty
   function loadTextarea(event) {
     var _id = id(this)
-      , msg = "There is a saved version for this content. Would you like to restore the saved version?";
+      , msg = "There is a saved version for this content. Would you like to restore the saved version?"
+      , should_restore;
     // Only attempt to restore if there's saved content
     // and we haven't restored it yet.
     if (localStorage[_id] && !$(this).attr("data-restored")) {
-      if ($(this).val().length === 0 || confirm(msg)) {
+      should_restore = $(this).val().length === 0 || ($(this).val() !== localStorage[_id] && confirm(msg));
+      if (should_restore) {
         $(this).val(localStorage[_id]);
         $(this).attr("data-restored", true);
         dirty[id(this)] = true;
