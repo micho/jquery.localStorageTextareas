@@ -1,4 +1,4 @@
-//
+/*global Modernizr*/
 // Saves textareas to localStorage when the data-save-id attribute is defined
 // as a unique string identifier for that textarea.
 //
@@ -12,7 +12,7 @@
 //
 // Notes:
 //
-// - Depends on underscore.js, jQuery 1.7.
+// - Depends on Modernizr.js, underscore.js, jQuery 1.7.
 // - You will need to manually clear localStorage if you need it.
 //
 // By Pablo Villalba, for Teambox 4 (http://teambox.com)
@@ -21,16 +21,7 @@
 (function () {
 
   // Run only if localStorage is supported
-  // (stolen from Modernizr)
-  function localStorageSupported() {
-    try {
-      return !!localStorage.getItem;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  if (!localStorageSupported()) {
+  if (typeof Modernizr === 'undefined' || !Modernizr.localstorage) {
     return;
   }
 
@@ -64,8 +55,13 @@
     }
   }
 
-  // Bonus function: Load all textareas on demand
-  // Usage: $(".container").loadSavedTextareas();
+  /**
+   * Load all textareas on demand
+   *
+   *   Usage: $(".container").loadSavedTextareas();
+   *
+   * @return {jQuery}
+   */
   $.fn.loadSavedTextareas = function () {
     var _id = id;
     return this.each(function () {
@@ -80,6 +76,23 @@
     });
   };
 
+  /**
+   * Remove a given textarea
+   *
+   *   Usage: $("textarea").clearSavedTextarea();
+   *
+   * @return {jQuery}
+   */
+  $.fn.clearSavedTextarea = function () {
+    var _id = id(this);
+
+    if (localStorage[_id]) {
+      localStorage.removeItem(_id);
+    }
+
+    return this;
+  };
+
   // Iterate over all textareas to see if they should be cleared
   // from the DOM
   function resetEmptyTextareas(event) {
@@ -88,6 +101,7 @@
         , is_saved = localStorage[_id]
         , is_empty = t.value ? t.value.length === 0 : true
         , is_dirty = dirty[_id];
+
       if (is_saved && is_empty && is_dirty) {
         localStorage.removeItem(_id);
       }
