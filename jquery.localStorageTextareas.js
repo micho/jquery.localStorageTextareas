@@ -1,4 +1,3 @@
-/*global Modernizr*/
 // Saves textareas to localStorage when the data-save-id attribute is defined
 // as a unique string identifier for that textarea.
 //
