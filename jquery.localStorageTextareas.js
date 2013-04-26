@@ -20,8 +20,16 @@
 
 (function () {
 
-  // Run only if localStorage is supported
-  if (typeof Modernizr === 'undefined' || !Modernizr.localstorage) {
+  // Don't load if localStorage isn't supported
+  function localStorageSupported() {
+    try {
+      return !!localStorage.getItem;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  if (!localStorageSupported()) {
     return;
   }
 
