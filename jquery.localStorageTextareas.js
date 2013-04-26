@@ -85,7 +85,7 @@
     var _id = id;
     return this.each(function () {
       var id = _id;
-      $(this).find("textarea[data-save-id]").each(function () {
+      $(this).find("input[data-save-id],textarea[data-save-id]").each(function () {
         var $this = $(this);
         if ($this.val().length === 0) {
           $this.val(localStorage.getItem(id(this)));
@@ -99,7 +99,7 @@
   /**
    * Remove a given textarea
    *
-   *   Usage: $("textarea").clearSavedTextarea();
+   *   Usage: $("textarea, input").clearSavedTextarea();
    *
    * @return {jQuery}
    */
@@ -116,7 +116,7 @@
   // Iterate over all textareas to see if they should be cleared
   // from the DOM
   function resetEmptyTextareas(event) {
-    $("textarea[data-save-id]").each(function (i, t) {
+    $("input[data-save-id],textarea[data-save-id]").each(function (i, t) {
       var _id = id(t)
         , is_saved = localStorage.getItem(_id)
         , is_empty = t.value ? t.value.length === 0 : true
@@ -129,8 +129,8 @@
   }
 
   // Bind events
-  $(document).on("keyup", "textarea[data-save-id]", saveTextarea);
-  $(document).on("click", "textarea[data-save-id]", loadTextarea);
+  $(document).on("keyup", "input[data-save-id],textarea[data-save-id]", saveTextarea);
+  $(document).on("click", "input[data-save-id],textarea[data-save-id]", loadTextarea);
   $(document).ajaxSuccess(resetEmptyTextareas);
 
 }());
