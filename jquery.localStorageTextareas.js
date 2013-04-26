@@ -39,9 +39,16 @@
     return "textareas-autosave/" + $(el).attr('data-save-id');
   }
 
+  // setItem wrapper to fix some localStorage issues in *le* iPad
+  // More info: http://stackoverflow.com/questions/2603682/
+  function setkey(key, val) {
+    localStorage.removeItem(key);
+    localStorage.setItem(key, val);
+  }
+
   // Save text to its unique identifier at most every 200ms
   saveTextarea = _.debounce(function (event) {
-    localStorage[id(this)] = $(this).val();
+    setkey(id(this), $(this).val());
     $(this).attr("data-restored", true);
     dirty[id(this)] = true;
   }, 200);
@@ -53,10 +60,14 @@
       , should_restore;
     // Only attempt to restore if there's saved content
     // and we haven't restored it yet.
-    if (localStorage[_id] && !$(this).attr("data-restored")) {
-      should_restore = $(this).val().length === 0 || ($(this).val() !== localStorage[_id] && confirm(msg));
+    if (localStorage.getItem(_id) && !$(this).attr("data-restored")) {
+      should_restore =
+        // Empty..
+        $(this).val().length === 0 ||
+        // ..or different that what we have saved (request confirmation)
+        ($(this).val() !== localStorage.getItem(_id) && confirm(msg));
       if (should_restore) {
-        $(this).val(localStorage[_id]);
+        $(this).val(localStorage.getItem(_id));
         $(this).attr("data-restored", true);
         dirty[id(this)] = true;
       }
@@ -75,9 +86,10 @@
     return this.each(function () {
       var id = _id;
       $(this).find("textarea[data-save-id]").each(function () {
-        if ($(this).val().length === 0) {
-          $(this).val(localStorage[id(this)]);
-          $(this).attr("data-restored", true);
+        var $this = $(this);
+        if ($this.val().length === 0) {
+          $this.val(localStorage.getItem(id(this)));
+          $this.attr("data-restored", true);
           dirty[id(this)] = true;
         }
       });
@@ -94,7 +106,7 @@
   $.fn.clearSavedTextarea = function () {
     var _id = id(this);
 
-    if (localStorage[_id]) {
+    if (localStorage.getItem(_id)) {
       localStorage.removeItem(_id);
     }
 
@@ -106,7 +118,7 @@
   function resetEmptyTextareas(event) {
     $("textarea[data-save-id]").each(function (i, t) {
       var _id = id(t)
-        , is_saved = localStorage[_id]
+        , is_saved = localStorage.getItem(_id)
         , is_empty = t.value ? t.value.length === 0 : true
         , is_dirty = dirty[_id];
 
