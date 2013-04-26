@@ -85,11 +85,20 @@
     var _id = id;
     return this.each(function () {
       var id = _id;
+      // Restore input and textarea as text
       $(this).find("input[data-save-id],textarea[data-save-id]").each(function () {
         var $this = $(this);
         if ($this.val().length === 0) {
           $this.val(localStorage.getItem(id(this)));
           $this.attr("data-restored", true);
+          dirty[id(this)] = true;
+        }
+      });
+      // Restore select as a value
+      $(this).find("select[data-save-id]").each(function () {
+        var saved = localStorage.getItem(id(this));
+        if (saved) {
+          $(this).val(saved).attr("data-restored", true);
           dirty[id(this)] = true;
         }
       });
@@ -99,7 +108,7 @@
   /**
    * Remove a given textarea
    *
-   *   Usage: $("textarea, input").clearSavedTextarea();
+   *   Usage: $("textarea, input, select").clearSavedTextarea();
    *
    * @return {jQuery}
    */
@@ -116,7 +125,7 @@
   // Iterate over all textareas to see if they should be cleared
   // from the DOM
   function resetEmptyTextareas(event) {
-    $("input[data-save-id],textarea[data-save-id]").each(function (i, t) {
+    $("select[data-save-id],input[data-save-id],textarea[data-save-id]").each(function (i, t) {
       var _id = id(t)
         , is_saved = localStorage.getItem(_id)
         , is_empty = t.value ? t.value.length === 0 : true
@@ -129,8 +138,9 @@
   }
 
   // Bind events
-  $(document).on("keyup", "input[data-save-id],textarea[data-save-id]", saveTextarea);
-  $(document).on("click", "input[data-save-id],textarea[data-save-id]", loadTextarea);
+  $(document).on("change", "select[data-save-id]", saveTextarea);
+  $(document).on("keyup", "select[data-save-id],input[data-save-id],textarea[data-save-id]", saveTextarea);
+  $(document).on("click", "select[data-save-id],input[data-save-id],textarea[data-save-id]", loadTextarea);
   $(document).ajaxSuccess(resetEmptyTextareas);
 
 }());
